@@ -4,80 +4,75 @@ import Dashboard from "../components/Dashboard";
 import Processor from "../processor/Processor";
 import processor from "../processor/ProcessorService";
 import inventoryService from "../services/InventoryService";
+import { useApp } from "../context/AppContext";
+import InventoryView from "../modules/Inventory/InventoryView";
+
+function Placeholder({ title }) {
+  return (
+    <div>
+      <h1 style={{ color: "#fff" }}>{title}</h1>
+      <p style={{ color: "#888" }}>Module shell — not implemented yet.</p>
+    </div>
+  );
+}
 
 function App() {
+  const { activeModule } = useApp();
   const [inventory, setInventory] = useState(
     processor.getState("inventory") || {}
   );
 
   useEffect(() => {
+    // Seed processor from service once so Dashboard has live numbers
+    if (!processor.getState("inventory")) {
+      processor.setState("inventory", inventoryService.getTotals());
+    }
+
     const refresh = () => {
-      console.log("[App] Refreshing inventory...");
       setInventory(processor.getState("inventory") || {});
     };
 
     refresh();
 
     processor.on("stateChanged", ({ key }) => {
-      if (key === "inventory") {
-        refresh();
-      }
+      if (key === "inventory") refresh();
     });
   }, []);
 
-  const addTestAsset = () => {
-    inventoryService.addAsset({
-      name: "Gelato",
-      weight: 250,
-      value: 9500,
-      lowStock: false,
-    });
+  let content;
+  switch (activeModule) {
+    case "inventory":
+      content = <InventoryView />;
+      break;
+    case "sales":
+      content = <Placeholder title="🛒 Sales" />;
+      break;
+    case "cashflow":
+      content = <Placeholder title="💰 Cash Flow" />;
+      break;
+    case "projects":
+      content = <Placeholder title="📁 Projects" />;
+      break;
+    case "investors":
+      content = <Placeholder title="👥 Investors" />;
+      break;
+    case "oracle":
+      content = <Placeholder title="🧠 Oracle" />;
+      break;
+    case "settings":
+      content = <Placeholder title="⚙ Settings" />;
+      break;
+    case "dashboard":
+    default:
+      content = (
+        <>
+          <Dashboard />
+          <Processor />
+        </>
+      );
+  }
 
-    const totals = inventoryService.getTotals();
-
-    processor.setState("inventory", totals);
-  };
-
-  return (
-    <Layout>
-      <Dashboard />
-
-      <button
-        onClick={addTestAsset}
-        style={{
-          padding: "10px 16px",
-          marginBottom: "20px",
-          cursor: "pointer",
-          fontSize: "16px",
-        }}
-      >
-        ➕ Add Test Asset
-      </button>
-
-      <h2>📦 Inventory Assets</h2>
-
-      {inventory.items?.map((item) => (
-        <div
-          key={item.id}
-          style={{
-            border: "1px solid #555",
-            borderRadius: "8px",
-            padding: "12px",
-            marginBottom: "12px",
-            background: "#1f1f1f",
-            color: "#fff",
-          }}
-        >
-          <h3>{item.name}</h3>
-          <p>⚖️ Weight: {item.weight} g</p>
-          <p>💰 Value: R{item.value}</p>
-          <p>{item.lowStock ? "🟡 Low Stock" : "🟢 Healthy"}</p>
-        </div>
-      ))}
-
-      <Processor />
-    </Layout>
-  );
+  return <Layout>{content}</Layout>;
 }
 
 export default App;

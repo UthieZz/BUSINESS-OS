@@ -1,6 +1,6 @@
 # Business OS - Project Context
 
-_Last Updated: 31 July / 1 August 2026_
+_Last Updated: 2 November 2026_
 
 ---
 
@@ -13,7 +13,7 @@ _Last Updated: 31 July / 1 August 2026_
 Progress:
 
 ```
-████████████████░░░░ 80%
+██████████████████░░ 90%
 ```
 
 ---
@@ -22,162 +22,71 @@ Progress:
 
 ## Repository
 
-- Git repository initialized inside `~/business-os`
-- Initial foundation committed
-- Business OS is now the canonical project
-- Legacy project remains archived separately
-
----
+- Git repository: UthieZz/BUSINESS-OS
+- Application shell committed
+- Processor event bus operational (in-memory)
 
 ## Application Shell
 
-Completed:
-
-- Reusable Card component
-- Dashboard component
-- Header
-- Sidebar
-- Layout
-- AppContext
-- Application shell integration
-- Shared module navigation state
-
-The application now has a permanent shell architecture instead of a prototype page.
-
----
+- Card, Dashboard, Header, Sidebar, Layout, AppContext
+- Shared module navigation state (`activeModule`)
+- **Sidebar navigation now switches views** (Dashboard / Inventory / placeholders)
 
 ## Processor
 
-Operational.
-
-Current modules:
-
-- Inventory
-- StrainBrain
-
-Processor state updates continue to function correctly.
-
----
-
-## Dashboard
-
-Dashboard is now componentized.
-
-Current widgets:
-
-- Inventory
-- Stock Weight
-- Low Stock
-- Cash Flow (placeholder)
-- Sales (placeholder)
-- Oracle (placeholder)
-
----
+Operational. Modules: Inventory (engine), StrainBrain.
 
 ## Inventory
 
-Current state:
-
-- InventoryService operational
-- Test asset creation operational
-- Live totals operational
-- Processor synchronization operational
-
-Current data displayed:
-
-- Assets
-- Total Weight
-- Inventory Value
-- Low Stock Alerts
+- InventoryService (in-memory) operational
+- Live totals via processor state
+- **InventoryView**: list items, add test asset, delete item
+- Hard-coded duplicate `src/modules/Inventory.jsx` removed
+- Numbers come only from InventoryService → processor
 
 ---
 
-# Architecture Decision
-
-Business OS uses a feature-based architecture.
+# Architecture
 
 ```
 src/
-    app/
-    components/
-    context/
-    modules/
-    processor/
-    services/
-```
-
-Each future feature will live inside its own folder.
-
-Example:
-
-```
-modules/
+  app/
+  components/
+  context/
+  modules/
     Inventory/
-    Sales/
-    CashFlow/
-    Oracle/
+      Inventory.jsx      # engine: registers state with processor
+      InventoryView.jsx  # UI: list / add / delete
+  processor/
+  services/
 ```
 
 ---
 
-# Outstanding Cleanup
+# Explicit gaps (do not invent)
 
-Current duplicate module structure:
-
-```
-src/modules/
-    Inventory.jsx
-    Inventory/
-        Inventory.jsx
-```
-
-Decision:
-
-- Keep `modules/Inventory/Inventory.jsx`
-- Remove the duplicate top-level `Inventory.jsx` after verifying it is unused.
+- **No Firebase / Firestore yet.** No `src/lib/firebase.js`. No live Vault path.
+- No HANDOFF.md / SYSTEM_PROMPT.md in repo (only this PROJECT_CONTEXT).
+- Theme partially touched (InventoryView uses #0A0A0C / #00FF66 / #d4af37); shell still generic dark.
+- No search/filter UI yet.
+- No atomic stock decrement transaction (requires Firestore).
 
 ---
 
-# Next Milestone
+# Next residual options
 
-Complete Sprint Zero by implementing Inventory CRUD.
-
-Planned functionality:
-
-- Create inventory items
-- Read inventory
-- Update inventory
-- Delete inventory
-- Search
-- Filtering
-- Firestore persistence
-
-After Inventory CRUD:
-
-Sprint One begins.
+1. Search/filter on InventoryView (in-memory).
+2. Add Firebase package + `src/lib/firebase.js` once credentials confirmed.
+3. Persist vault to `tracker/currentCycle/vault`.
+4. Full Cyber-Obsidian theme pass on Layout/Header/Sidebar.
+5. Atomic decrement path after Firestore is live.
 
 ---
 
-# Git Checkpoints
+# Git checkpoint
 
-## Checkpoint 1
+## Checkpoint 3 (2 Nov 2026)
 
-Initial Business OS foundation
-
-Completed.
-
-## Checkpoint 2 (Current)
-
-Application Shell Complete
-
-Includes:
-
-- Card
-- Header
-- Sidebar
-- Layout
-- Dashboard
-- AppContext
-- Navigation foundation
-
-Ready to commit.
+- Wired Sidebar → App view switch
+- Inventory delete + list from service only
+- Removed hard-coded Inventory.jsx duplicate
