@@ -5,8 +5,6 @@ import {
   addDoc,
   updateDoc,
   deleteDoc,
-  query,
-  where,
   runTransaction,
   serverTimestamp,
 } from "firebase/firestore";
@@ -48,18 +46,34 @@ class InventoryService {
   }
 
   async addAsset(asset) {
+    const weight = Number(asset.weight) || 0;
     const ref = await addDoc(vaultRef(), {
       ...asset,
+      weight,
+      value: Number(asset.value) || 0,
       createdAt: serverTimestamp(),
-      lowStock: (asset.weight || 0) < 100,
+      lowStock: weight < 100,
     });
-    return { id: ref.id, ...asset };
+    return { id: ref.id, ...asset, weight, lowStock: weight < 100 };
   }
 
   async updateAsset(id, updates) {
     const ref = doc(db, PATHS.VAULT, id);
-    await updateDoc(ref, { ...updates, updatedAt: serverTimestamp() });
-    return { id, ...updates };
+    const weight =
+      updates.weight !== undefined ? Number(updates.weight) : undefined;
+    const payload = {
+      ...updates,
+      updatedAt: serverTimestamp(),
+    };
+    if (weight !== undefined) {
+      payload.weight = weight;
+      payload.lowStock = weight < 100;
+    }
+    if (updates.value !== undefined) {
+      payload.value = Number(updates.value) || 0;
+    }
+    await updateDoc(ref, payload);
+    return { id, ...payload };
   }
 
   async removeAsset(id) {
