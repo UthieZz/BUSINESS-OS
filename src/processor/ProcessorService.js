@@ -8,9 +8,7 @@ class Processor {
 
   register(name, module) {
     this.modules[name] = module;
-
     console.log(`[Processor] Registered: ${name}`);
-
     this.emit("moduleRegistered", {
       name,
       totalModules: Object.keys(this.modules).length,
@@ -27,11 +25,7 @@ class Processor {
 
   setState(key, value) {
     this.state[key] = value;
-
-    this.emit("stateChanged", {
-      key,
-      value,
-    });
+    this.emit("stateChanged", { key, value });
   }
 
   getState(key) {
@@ -54,14 +48,20 @@ class Processor {
     if (!this.listeners[event]) {
       this.listeners[event] = [];
     }
-
     this.listeners[event].push(callback);
+    // Unsubscribe handle
+    return () => this.off(event, callback);
+  }
+
+  off(event, callback) {
+    if (!this.listeners[event]) return;
+    this.listeners[event] = this.listeners[event].filter((cb) => cb !== callback);
   }
 
   emit(event, data) {
     if (!this.listeners[event]) return;
-
-    this.listeners[event].forEach((callback) => callback(data));
+    // Copy array so off() during emit is safe
+    [...this.listeners[event]].forEach((callback) => callback(data));
   }
 }
 

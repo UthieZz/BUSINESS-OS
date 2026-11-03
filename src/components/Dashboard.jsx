@@ -1,14 +1,29 @@
+import { useEffect, useState } from "react";
 import Card from "./Card";
 import processor from "../processor/ProcessorService";
 
 function Dashboard() {
-  const inventory = processor.getState("inventory") || {};
+  const [inventory, setInventory] = useState(
+    () => processor.getState("inventory") || {}
+  );
+
+  useEffect(() => {
+    const onState = ({ key }) => {
+      if (key === "inventory") {
+        setInventory(processor.getState("inventory") || {});
+      }
+    };
+    // Seed + subscribe (unsubscribe on unmount)
+    setInventory(processor.getState("inventory") || {});
+    const unsub = processor.on("stateChanged", onState);
+    return unsub;
+  }, []);
 
   return (
     <div style={{ marginBottom: "30px" }}>
-      <h1>Business OS</h1>
+      <h1 style={{ color: "#00FF66" }}>Business OS</h1>
 
-      <h2>📊 Command Center</h2>
+      <h2 style={{ color: "#d4af37" }}>📊 Command Center</h2>
 
       <div
         style={{
@@ -39,9 +54,7 @@ function Dashboard() {
           title="Low Stock"
           value={inventory.lowStockAlerts ?? 0}
           subtitle="Requires Attention"
-          status={
-            inventory.lowStockAlerts > 0 ? "warning" : "success"
-          }
+          status={inventory.lowStockAlerts > 0 ? "warning" : "success"}
         />
 
         <Card

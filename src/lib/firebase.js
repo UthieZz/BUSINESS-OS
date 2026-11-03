@@ -1,7 +1,7 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
-// Replace with your Firebase project config. Never commit real keys.
+// Credentials via Vite env only. Never commit real keys.
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
@@ -11,13 +11,36 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
 };
 
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+export const isFirebaseConfigured = Boolean(
+  firebaseConfig.apiKey && firebaseConfig.projectId
+);
 
-// Locked paths — do not invent new top-level roots.
+// Guard: empty config must not crash module import at build/dev start.
+let app = null;
+let db = null;
+
+if (isFirebaseConfigured) {
+  app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+  db = getFirestore(app);
+} else {
+  console.warn(
+    "[firebase] Missing VITE_FIREBASE_* env. Vault calls will fail until configured."
+  );
+}
+
+export { db };
+
+/**
+ * Locked path segments for Firestore.
+ * Use as: collection(db, ...PATHS.VAULT)
+ * Do not invent new top-level roots.
+ *
+ * VAULT = collection under doc tracker/currentCycle
+ * (collection / doc / collection)
+ */
 export const PATHS = {
-  VAULT: "tracker/currentCycle/vault",
-  INVESTORS: "tracker/currentCycle/investors",
-  SALES: "sales",
-  DROP_REQUESTS: "drop_requests",
+  VAULT: ["tracker", "currentCycle", "vault"],
+  INVESTORS: ["tracker", "currentCycle", "investors"],
+  SALES: ["sales"],
+  DROP_REQUESTS: ["drop_requests"],
 };

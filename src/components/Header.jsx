@@ -3,8 +3,8 @@ function Header() {
     <header
       style={{
         height: "72px",
-        background: "#181818",
-        borderBottom: "1px solid #333",
+        background: "#0A0A0C",
+        borderBottom: "1px solid #d4af37",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -12,47 +12,13 @@ function Header() {
       }}
     >
       <div>
-        <h2
-          style={{
-            margin: 0,
-            color: "#fff",
-          }}
-        >
-          Business OS
-        </h2>
-
-        <small
-          style={{
-            color: "#888",
-          }}
-        >
-          StokeD⁴Toke Command Center
-        </small>
+        <h2 style={{ margin: 0, color: "#00FF66" }}>Business OS</h2>
+        <small style={{ color: "#d4af37" }}>StokeD⁴T Command Center</small>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "12px",
-        }}
-      >
-        <span
-          style={{
-            color: "#22c55e",
-            fontWeight: "bold",
-          }}
-        >
-          ● ONLINE
-        </span>
-
-        <span
-          style={{
-            color: "#aaa",
-          }}
-        >
-          Sprint Zero
-        </span>
+      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        <span style={{ color: "#00FF66", fontWeight: "bold" }}>● ONLINE</span>
+        <span style={{ color: "#888" }}>Sprint Zero</span>
       </div>
     </header>
   );
