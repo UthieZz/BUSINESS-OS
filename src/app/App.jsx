@@ -62,6 +62,8 @@ function App() {
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
 
+  // Own the list in App. Do NOT re-fetch on processor stateChanged from self
+  // (setState → listener → refresh → setState = infinite loop).
   const refresh = useCallback(async () => {
     setLoading(true);
     setError("");
@@ -80,10 +82,6 @@ function App() {
 
   useEffect(() => {
     refresh();
-    const onState = ({ key }) => {
-      if (key === "inventory") refresh();
-    };
-    processor.on("stateChanged", onState);
   }, [refresh]);
 
   const setField = (key, value) => {
