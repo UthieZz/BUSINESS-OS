@@ -6,7 +6,7 @@ function Layout({ children }) {
     <div
       style={{
         minHeight: "100vh",
-        background: "#121212",
+        background: "#0A0A0C",
         color: "#fff",
       }}
     >

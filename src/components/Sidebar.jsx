@@ -18,7 +18,7 @@ function Sidebar() {
     <aside
       style={{
         width: "240px",
-        background: "#161616",
+        background: "#0A0A0C",
         borderRight: "1px solid #333",
         padding: "24px 0",
         minHeight: "calc(100vh - 72px)",
@@ -31,7 +31,7 @@ function Sidebar() {
           style={{
             padding: "14px 24px",
             cursor: "pointer",
-            color: activeModule === item.id ? "#22c55e" : "#ddd",
+            color: activeModule === item.id ? "#00FF66" : "#ddd",
             background:
               activeModule === item.id ? "#222" : "transparent",
             fontWeight: activeModule === item.id ? "bold" : "normal",
