@@ -13,12 +13,7 @@ function App() {
       return <Dashboard />;
     }
     if (activeModule === "inventory") {
-      return (
-        <>
-          <Inventory />
-          <InventoryView />
-        </>
-      );
+      return <InventoryView />;
     }
     return (
       <div>
@@ -30,6 +25,7 @@ function App() {
 
   return (
     <Layout>
+      <Inventory />
       {renderModule()}
       <Processor />
     </Layout>
