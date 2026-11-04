@@ -1,6 +1,6 @@
 # Business OS - Project Context
 
-_Last Updated: 3 November 2026_
+_Last Updated: 4 November 2026_
 
 ---
 
@@ -13,7 +13,7 @@ _Last Updated: 3 November 2026_
 Progress:
 
 ```
-██████████████████░░ 90%
+████████████████████ 95%
 ```
 
 Local machine inaccessible → live Firestore proof **PENDING**. See `docs/PENDING.md`.
@@ -31,7 +31,9 @@ Local machine inaccessible → live Firestore proof **PENDING**. See `docs/PENDI
   - `sales`
   - `drop_requests`
 - InventoryService: Firestore CRUD + search/filter + atomic `decrementStock`
-- App: vault list, search, low-stock filter, delete, theme Cyber-Obsidian
+- Vault UI consolidated to single surface: `InventoryView.jsx` (add/edit/delete/search/low-stock filter)
+- App routes inventory module to InventoryView; engine in Inventory.jsx
+- Theme Cyber-Obsidian
 - firebase dependency in package.json
 
 ---
@@ -40,7 +42,7 @@ Local machine inaccessible → live Firestore proof **PENDING**. See `docs/PENDI
 
 1. VITE_FIREBASE_* / real config + `npm install`
 2. Live round-trip smoke test
-3. Create + Update UI (code remote-ok; proof local)
+3. Confirm mobile drawer if needed
 
 ---
 
@@ -56,6 +58,6 @@ Local machine inaccessible → live Firestore proof **PENDING**. See `docs/PENDI
 
 # Next residual (remote-safe)
 
-1. Implement Add + Edit UI against existing InventoryService
-2. Remove any remaining hard-coded inventory paths if found
+1. Mobile sidebar drawer/collapse
+2. Replace confirm() with mobile-friendly dialog
 3. When machine returns: env + smoke test → close Sprint Zero
