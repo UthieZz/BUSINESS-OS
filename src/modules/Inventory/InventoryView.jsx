@@ -56,6 +56,7 @@ export default function InventoryView() {
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -117,16 +118,24 @@ export default function InventoryView() {
     }
   };
 
-  const removeAsset = async (id) => {
-    if (!confirm("Delete this vault item?")) return;
+  const requestDelete = (id) => {
+    setDeleteConfirmId(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteConfirmId) return;
+    const id = deleteConfirmId;
+    setDeleteConfirmId(null);
     try {
       await inventoryService.removeAsset(id);
       if (editingId === id) resetForm();
       await refresh();
     } catch (e) {
-      setError(e.message);
+      setError(e.message || "Delete failed");
     }
   };
+
+  const cancelDelete = () => setDeleteConfirmId(null);
 
   const items = inventory.items || [];
 
@@ -230,11 +239,53 @@ export default function InventoryView() {
             <button type="button" onClick={() => startEdit(item)} style={btnGold}>
               Edit
             </button>
-            <button type="button" onClick={() => removeAsset(item.id)} style={btnDanger}>
+            <button type="button" onClick={() => requestDelete(item.id)} style={btnDanger}>
               Delete
             </button>
           </div>
         ))
+      )}
+
+      {deleteConfirmId && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(10, 10, 12, 0.85)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+            padding: 16,
+          }}
+          onClick={cancelDelete}
+        >
+          <div
+            style={{
+              background: "#111114",
+              border: "1px solid #d4af37",
+              borderRadius: 8,
+              padding: 24,
+              maxWidth: 360,
+              width: "100%",
+              color: "#fff",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 style={{ margin: "0 0 12px", color: "#d4af37" }}>Delete vault item?</h3>
+            <p style={{ margin: "0 0 20px", color: "#ccc" }}>
+              This permanently removes the item. Stock history is not preserved.
+            </p>
+            <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
+              <button type="button" onClick={cancelDelete} style={btnGold}>
+                Cancel
+              </button>
+              <button type="button" onClick={confirmDelete} style={{ ...btnDanger, padding: "10px 16px" }}>
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
