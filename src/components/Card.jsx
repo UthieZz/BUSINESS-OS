@@ -19,8 +19,8 @@ function Card({
     <div
       onClick={onClick}
       style={{
-        background: "#1f1f1f",
-        border: `1px solid ${borderColors[status]}`,
+        background: "var(--card-bg)",
+        border: `1px solid ${borderColors[status] || "var(--border)"}`,
         borderRadius: "12px",
         padding: "18px",
         minHeight: "140px",
