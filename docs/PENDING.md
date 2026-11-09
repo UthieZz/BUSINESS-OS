@@ -1,5 +1,5 @@
 Sprint Zero residuals:
-- Live vault read/write + search/filter/edit/delete confirmed.
+- Live vault read/write + search/filter/edit/delete confirmed (InventoryView implemented).
 - Atomic decrementStock exposed via Sell control on vault items (uses Firestore transaction).
 - Theme Card aligned to --card-bg.
 - Build green.
