@@ -16,7 +16,7 @@ Progress:
 ████████████████████ 100%
 ```
 
-Vault UI residual closed. Live Firestore round-trip still requires local `VITE_FIREBASE_*` + smoke test.
+Vault UI residual closed (search/filter/edit/delete + mobile delete modal). Live Firestore round-trip still requires local `VITE_FIREBASE_*` + smoke test.
 
 ---
 
@@ -31,7 +31,7 @@ Vault UI residual closed. Live Firestore round-trip still requires local `VITE_F
   - `sales`
   - `drop_requests`
 - InventoryService: Firestore CRUD + search/filter + atomic `decrementStock`
-- Vault UI: `InventoryView.jsx` — list, search, low-stock filter, add/edit modal, delete confirmation, processor sync
+- Vault UI: `InventoryView.jsx` — list, search, low-stock filter, add/edit, mobile delete modal, sell/decrement, processor sync
 - App routes inventory module to InventoryView; engine in Inventory.jsx
 - Theme Cyber-Obsidian
 - firebase dependency in package.json
