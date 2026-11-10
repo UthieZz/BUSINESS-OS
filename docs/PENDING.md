@@ -3,5 +3,6 @@ Sprint Zero residuals:
 - Atomic decrementStock exposed via Sell control on vault items (uses Firestore transaction).
 - Delete confirmation is now an in-app modal (mobile-friendly; no window.confirm).
 - Theme Card aligned to --card-bg.
+- Header status indicator now reflects processor inventory status (LIVE/OFFLINE) instead of hard-coded ONLINE.
 - Build green.
 Next: live smoke with real env, Auth + rules before public, Sales module that consumes decrement.
