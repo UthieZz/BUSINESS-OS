@@ -1,7 +1,24 @@
+import { useEffect, useState } from "react";
 import { useApp } from "../context/AppContext";
+import processor from "../processor/ProcessorService";
 
 function Header() {
   const { toggleSidebar } = useApp();
+  const [status, setStatus] = useState("OFFLINE");
+
+  useEffect(() => {
+    const update = () => {
+      const inv = processor.getState("inventory");
+      setStatus(inv?.status || "OFFLINE");
+    };
+    update();
+    const unsub = processor.on("stateChanged", ({ key }) => {
+      if (key === "inventory") update();
+    });
+    return unsub;
+  }, []);
+
+  const isLive = status === "LIVE";
 
   return (
     <header
@@ -43,7 +60,9 @@ function Header() {
       </div>
 
       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        <span style={{ color: "#00FF66", fontWeight: "bold" }}>● ONLINE</span>
+        <span style={{ color: isLive ? "#00FF66" : "#f59e0b", fontWeight: "bold" }}>
+          ● {isLive ? "LIVE" : "OFFLINE"}
+        </span>
         <span style={{ color: "#888" }}>Sprint Zero</span>
       </div>
 
