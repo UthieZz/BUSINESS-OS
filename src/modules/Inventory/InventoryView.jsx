@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import inventoryService from "../../services/InventoryService";
 import processor from "../../processor/ProcessorService";
+import { isFirebaseConfigured } from "../../lib/firebase.js";
 
 export default function InventoryView() {
   const [items, setItems] = useState([]);
@@ -99,6 +100,15 @@ export default function InventoryView() {
   return (
     <div style={{ color: "var(--text)" }}>
       <h2 style={{ color: "var(--accent)", marginTop: 0 }}>Vault / Inventory</h2>
+
+      {!isFirebaseConfigured && (
+        <div style={{ background: "#3a2a1a", color: "#f59e0b", padding: 12, borderRadius: 6, marginBottom: 12, border: "1px solid #f59e0b" }}>
+          <strong>OFFLINE — Firebase not configured.</strong>
+          <p style={{ margin: "6px 0 0", fontSize: 14 }}>
+            Copy <code>.env.example</code> to <code>.env</code>, fill <code>VITE_FIREBASE_*</code> values from your Firebase console, then restart <code>npm run dev</code>. Vault reads/writes and <code>decrementStock</code> transactions require live config.
+          </p>
+        </div>
+      )}
 
       {error && (
         <div style={{ background: "#3a1a1a", color: "#ff6b6b", padding: 12, borderRadius: 6, marginBottom: 12 }}>
