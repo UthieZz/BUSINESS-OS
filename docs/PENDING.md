@@ -4,5 +4,7 @@ Sprint Zero residuals:
 - Delete confirmation is now an in-app modal (mobile-friendly; no window.confirm).
 - Theme Card aligned to --card-bg.
 - Header status indicator now reflects processor inventory status (LIVE/OFFLINE) instead of hard-coded ONLINE.
+- Offline config banner added to Vault when VITE_FIREBASE_* missing.
+- .env.example added.
 - Build green.
 Next: live smoke with real env, Auth + rules before public, Sales module that consumes decrement.
