@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import Card from "./Card";
 import processor from "../processor/ProcessorService";
+import { useApp } from "../context/AppContext";
 
 function Dashboard() {
+  const { setActiveModule } = useApp();
   const [inventory, setInventory] = useState(
     () => processor.getState("inventory") || {}
   );
@@ -18,6 +20,8 @@ function Dashboard() {
     const unsub = processor.on("stateChanged", onState);
     return unsub;
   }, []);
+
+  const goToInventory = () => setActiveModule("inventory");
 
   return (
     <div style={{ marginBottom: "30px" }}>
@@ -39,6 +43,7 @@ function Dashboard() {
           value={`${inventory.assets ?? 0} Assets`}
           subtitle={`R${inventory.inventoryValue ?? 0}`}
           status="success"
+          onClick={goToInventory}
         />
 
         <Card
@@ -47,6 +52,7 @@ function Dashboard() {
           value={`${inventory.totalWeight ?? 0} g`}
           subtitle="Current Inventory"
           status="info"
+          onClick={goToInventory}
         />
 
         <Card
@@ -55,6 +61,7 @@ function Dashboard() {
           value={inventory.lowStockAlerts ?? 0}
           subtitle="Requires Attention"
           status={inventory.lowStockAlerts > 0 ? "warning" : "success"}
+          onClick={goToInventory}
         />
 
         <Card

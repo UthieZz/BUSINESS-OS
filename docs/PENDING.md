@@ -6,5 +6,6 @@ Sprint Zero residuals:
 - Header status indicator now reflects processor inventory status (LIVE/OFFLINE) instead of hard-coded ONLINE.
 - Offline config banner added to Vault when VITE_FIREBASE_* missing.
 - .env.example added.
+- Dashboard inventory cards now navigate to Vault on click (wires Header/Sidebar path without new modules).
 - Build green.
 Next: live smoke with real env, Auth + rules before public, Sales module that consumes decrement.
