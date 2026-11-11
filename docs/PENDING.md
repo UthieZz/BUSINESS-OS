@@ -6,5 +6,6 @@ Sprint Zero residuals:
 - Header status indicator now reflects processor inventory status (LIVE/OFFLINE) instead of hard-coded ONLINE.
 - Offline config banner added to Vault when VITE_FIREBASE_* missing.
 - .env.example added.
-- Build green.
-Next: live smoke with real env, Auth + rules before public, Sales module that consumes decrement.
+- Dual inventory surfaces resolved: Inventory.jsx is no-render engine that seeds processor; InventoryView.jsx is the sole UI routed from App.
+- Local npm install + production build green (vite build succeeds; chunk warning only).
+Next: live smoke with real env (requires VITE_FIREBASE_*), Auth + Firestore rules before any public exposure, Sales module that consumes decrementStock.
