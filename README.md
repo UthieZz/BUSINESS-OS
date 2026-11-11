@@ -1,16 +1,29 @@
-# React + Vite
+# Business OS — StokeD⁴T
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React 19 + Vite SPA for operating Stoked4T. Cloud Firestore only. Paths locked in `src/lib/firebase.js`.
 
-Currently, two official plugins are available:
+## Stack
+- React 19 + Vite
+- Firebase JS SDK 11 (Firestore)
+- Processor event bus for state coordination
+- Cyber-Obsidian theme (`#0A0A0C`, neon `#00FF66`, gold `#d4af37`)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Run locally
+```bash
+npm install
+cp .env.example .env   # fill VITE_FIREBASE_* from Firebase console
+npm run dev
+```
 
-## React Compiler
+## Structure
+- `src/lib/firebase.js` — config + locked PATHS
+- `src/services/InventoryService.js` — vault CRUD + atomic `decrementStock`
+- `src/modules/Inventory/Inventory.jsx` — no-render engine (seeds processor)
+- `src/modules/Inventory/InventoryView.jsx` — sole vault UI (search/filter/edit/delete/sell)
+- `src/processor/` — event bus
+- `src/components/` — Header, Sidebar (mobile drawer), Layout, Dashboard
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Status
+Sprint Zero close-out: live vault path implemented; local build green. Live smoke, Auth + rules, and Sales still residual.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+See `docs/BUSINESS_OS_HANDOFF.md` and `docs/PENDING.md`.
