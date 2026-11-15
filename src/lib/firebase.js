@@ -1,14 +1,15 @@
 import { initializeApp, getApps } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
-// Credentials via Vite env only. Never commit real keys.
+// Credentials via Vite env; confirmed project config as fallback.
+// Client config is public; rules + Auth enforce access. Never commit private keys.
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyDWnDaA9pIibbI9s3s0CSRg_ORfg2uOWL0",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "stoked4t.firebaseapp.com",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "stoked4t",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "stoked4t.firebasestorage.app",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "499210795671",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:499210795671:web:631e854676943c09be07d2",
 };
 
 export const isFirebaseConfigured = Boolean(
