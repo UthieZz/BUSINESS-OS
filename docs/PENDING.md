@@ -8,6 +8,7 @@ Sprint Zero residuals:
 - .env.example added.
 - Dual inventory surfaces resolved: Inventory.jsx is no-render engine that seeds processor; InventoryView.jsx is the sole UI routed from App.
 - Local npm install + production build green (vite build succeeds; chunk warning only).
+- Vault UX: consistent ZAR formatting (toFixed(2)), larger mobile touch targets (min-height 44px on inputs/buttons), last-updated timestamp in filtered totals.
 Next: live smoke with real env (requires VITE_FIREBASE_*), Auth + Firestore rules before any public exposure, Sales module that consumes decrementStock.
 
 - Filtered totals summary (count / weight / value) added to Vault list for quicker residual awareness.
