@@ -3,17 +3,23 @@ import inventoryService from "../../services/InventoryService";
 import processor from "../../processor/ProcessorService";
 import { isFirebaseConfigured } from "../../lib/firebase.js";
 
+function formatZAR(n) {
+  const num = Number(n) || 0;
+  return `R${num.toFixed(2)}`;
+}
+
 export default function InventoryView() {
   const [items, setItems] = useState([]);
   const [search, setSearch] = useState("");
   const [lowStockOnly, setLowStockOnly] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [editing, setEditing] = useState(null); // id or null
+  const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({ name: "", weight: "", value: "", strain: "" });
   const [sellId, setSellId] = useState(null);
   const [sellGrams, setSellGrams] = useState("");
   const [deleteId, setDeleteId] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState(null);
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -21,9 +27,9 @@ export default function InventoryView() {
     try {
       const data = await inventoryService.getAssets(search, lowStockOnly);
       setItems(data);
-      // Keep processor in sync for Dashboard
       const totals = await inventoryService.getTotals();
       processor.setState("inventory", totals);
+      setLastUpdated(totals.lastUpdated);
     } catch (e) {
       setError(e.message || "Failed to load vault");
       setItems([]);
@@ -97,6 +103,9 @@ export default function InventoryView() {
     }
   };
 
+  const totalWeight = items.reduce((s, i) => s + (Number(i.weight) || 0), 0);
+  const totalValue = items.reduce((s, i) => s + (Number(i.value) || 0), 0);
+
   return (
     <div style={{ color: "var(--text)" }}>
       <h2 style={{ color: "var(--accent)", marginTop: 0 }}>Vault / Inventory</h2>
@@ -123,15 +132,16 @@ export default function InventoryView() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           style={{
-            background: "#111",
-            border: "1px solid #333",
-            color: "#fff",
-            padding: "8px 12px",
+            background: "var(--card-bg)",
+            border: "1px solid var(--border)",
+            color: "var(--text)",
+            padding: "10px 14px",
             borderRadius: 4,
             flex: "1 1 200px",
+            minHeight: 44,
           }}
         />
-        <label style={{ display: "flex", alignItems: "center", gap: 6, color: "#ccc" }}>
+        <label style={{ display: "flex", alignItems: "center", gap: 6, color: "#ccc", minHeight: 44 }}>
           <input
             type="checkbox"
             checked={lowStockOnly}
@@ -147,17 +157,17 @@ export default function InventoryView() {
             background: "var(--accent)",
             color: "#0A0A0C",
             border: "none",
-            padding: "8px 14px",
+            padding: "10px 16px",
             borderRadius: 4,
             cursor: "pointer",
             fontWeight: "bold",
+            minHeight: 44,
           }}
         >
           {loading ? "Loading..." : "Refresh"}
         </button>
       </div>
 
-      {/* Add / Edit form */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -211,11 +221,12 @@ export default function InventoryView() {
               background: "var(--accent)",
               color: "#0A0A0C",
               border: "none",
-              padding: "8px 16px",
+              padding: "10px 16px",
               borderRadius: 4,
               cursor: "pointer",
               fontWeight: "bold",
               flex: 1,
+              minHeight: 44,
             }}
           >
             {editing ? "Update" : "Add to Vault"}
@@ -228,9 +239,10 @@ export default function InventoryView() {
                 background: "transparent",
                 border: "1px solid #666",
                 color: "#ccc",
-                padding: "8px 12px",
+                padding: "10px 12px",
                 borderRadius: 4,
                 cursor: "pointer",
+                minHeight: 44,
               }}
             >
               Cancel
@@ -239,14 +251,13 @@ export default function InventoryView() {
         </div>
       </form>
 
-      {/* Filtered totals */}
       {items.length > 0 && (
         <div style={{ marginBottom: 12, color: "var(--gold)", fontSize: 14 }}>
-          Showing {items.length} item{items.length !== 1 ? "s" : ""} · {items.reduce((s, i) => s + (Number(i.weight) || 0), 0).toFixed(1)} g · R{items.reduce((s, i) => s + (Number(i.value) || 0), 0).toFixed(2)}
+          Showing {items.length} item{items.length !== 1 ? "s" : ""} · {totalWeight.toFixed(1)} g · {formatZAR(totalValue)}
+          {lastUpdated && <span style={{ color: "#888", marginLeft: 8 }}>· updated {new Date(lastUpdated).toLocaleTimeString()}</span>}
         </div>
       )}
 
-      {/* List */}
       {loading && items.length === 0 ? (
         <p>Loading vault...</p>
       ) : items.length === 0 ? (
@@ -272,21 +283,20 @@ export default function InventoryView() {
                 <strong style={{ color: "var(--accent)" }}>{item.name || "Unnamed"}</strong>
                 {item.strain && <span style={{ color: "#999", marginLeft: 8 }}>({item.strain})</span>}
                 <div style={{ fontSize: 14, color: "#ccc", marginTop: 4 }}>
-                  {item.weight ?? 0} g · R{item.value ?? 0}
+                  {item.weight ?? 0} g · {formatZAR(item.value)}
                   {item.lowStock && <span style={{ color: "#f59e0b", marginLeft: 8 }}>· LOW</span>}
                 </div>
               </div>
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                <button onClick={() => startEdit(item)} style={btnSecondary}>Edit</button>
-                <button onClick={() => setSellId(item.id)} style={btnGold}>Sell</button>
-                <button onClick={() => requestDelete(item.id)} style={btnDanger}>Delete</button>
+                <button onClick={() => startEdit(item)} style={{ ...btnSecondary, minHeight: 44, padding: "10px 14px" }}>Edit</button>
+                <button onClick={() => setSellId(item.id)} style={{ ...btnGold, minHeight: 44, padding: "10px 14px" }}>Sell</button>
+                <button onClick={() => requestDelete(item.id)} style={{ ...btnDanger, minHeight: 44, padding: "10px 14px" }}>Delete</button>
               </div>
             </div>
           ))}
         </div>
       )}
 
-      {/* Delete confirmation modal */}
       {deleteId && (
         <div
           style={{
@@ -314,14 +324,13 @@ export default function InventoryView() {
             <h3 style={{ margin: "0 0 12px", color: "#ef4444" }}>Delete vault item?</h3>
             <p style={{ color: "#ccc", margin: "0 0 16px" }}>This cannot be undone. The item will be removed from the vault.</p>
             <div style={{ display: "flex", gap: 8 }}>
-              <button type="button" onClick={confirmDelete} style={{ ...btnDanger, flex: 1, background: "#ef4444", color: "#fff", border: "none", fontWeight: "bold" }}>Delete</button>
-              <button type="button" onClick={() => setDeleteId(null)} style={btnSecondary}>Cancel</button>
+              <button type="button" onClick={confirmDelete} style={{ ...btnDanger, flex: 1, background: "#ef4444", color: "#fff", border: "none", fontWeight: "bold", minHeight: 44 }}>Delete</button>
+              <button type="button" onClick={() => setDeleteId(null)} style={{ ...btnSecondary, minHeight: 44 }}>Cancel</button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Sell modal / inline */}
       {sellId && (
         <div
           style={{
@@ -355,12 +364,12 @@ export default function InventoryView() {
               placeholder="Grams to sell"
               value={sellGrams}
               onChange={(e) => setSellGrams(e.target.value)}
-              style={{ ...inputStyle, width: "100%", marginBottom: 12 }}
+              style={{ ...inputStyle, width: "100%", marginBottom: 12, minHeight: 44 }}
               autoFocus
             />
             <div style={{ display: "flex", gap: 8 }}>
-              <button type="submit" style={{ ...btnAccent, flex: 1 }}>Confirm Sell</button>
-              <button type="button" onClick={() => setSellId(null)} style={btnSecondary}>Cancel</button>
+              <button type="submit" style={{ ...btnAccent, flex: 1, minHeight: 44 }}>Confirm Sell</button>
+              <button type="button" onClick={() => setSellId(null)} style={{ ...btnSecondary, minHeight: 44 }}>Cancel</button>
             </div>
           </form>
         </div>
@@ -373,17 +382,18 @@ const inputStyle = {
   background: "#111",
   border: "1px solid #333",
   color: "#fff",
-  padding: "8px 10px",
+  padding: "10px 12px",
   borderRadius: 4,
   width: "100%",
   boxSizing: "border-box",
+  minHeight: 44,
 };
 
 const btnAccent = {
   background: "var(--accent)",
   color: "#0A0A0C",
   border: "none",
-  padding: "8px 12px",
+  padding: "10px 12px",
   borderRadius: 4,
   cursor: "pointer",
   fontWeight: "bold",
@@ -393,7 +403,7 @@ const btnSecondary = {
   background: "transparent",
   border: "1px solid #555",
   color: "#ddd",
-  padding: "6px 12px",
+  padding: "8px 12px",
   borderRadius: 4,
   cursor: "pointer",
 };
@@ -402,7 +412,7 @@ const btnGold = {
   background: "transparent",
   border: "1px solid var(--gold)",
   color: "var(--gold)",
-  padding: "6px 12px",
+  padding: "8px 12px",
   borderRadius: 4,
   cursor: "pointer",
 };
@@ -411,7 +421,7 @@ const btnDanger = {
   background: "transparent",
   border: "1px solid #ef4444",
   color: "#ef4444",
-  padding: "6px 12px",
+  padding: "8px 12px",
   borderRadius: 4,
   cursor: "pointer",
 };
