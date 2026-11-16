@@ -1,6 +1,6 @@
 # Business OS - Project Context
 
-_Last Updated: 6 November 2026_
+_Last Updated: 16 November 2026_
 
 ---
 
@@ -16,7 +16,7 @@ Progress:
 ████████████████████ 100%
 ```
 
-Vault UI residual closed (search/filter/edit/delete + mobile delete modal). Live Firestore round-trip still requires local `VITE_FIREBASE_*` + smoke test.
+Vault UI residual closed (search/filter/edit/delete + mobile delete modal). Confirmed stoked4t client config is now the fallback in `src/lib/firebase.js` (env overrides). `isFirebaseConfigured` is true by default. Live Firestore round-trip smoke test remains the verification residual.
 
 ---
 
@@ -25,7 +25,7 @@ Vault UI residual closed (search/filter/edit/delete + mobile delete modal). Live
 - Application shell: Card, Dashboard, Header, Sidebar, Layout, AppContext
 - Sidebar navigation switches modules (mobile drawer present)
 - Processor event bus operational
-- `src/lib/firebase.js` with locked PATHS:
+- `src/lib/firebase.js` with locked PATHS and confirmed config fallback:
   - `tracker/currentCycle/vault`
   - `tracker/currentCycle/investors`
   - `sales`
@@ -35,14 +35,15 @@ Vault UI residual closed (search/filter/edit/delete + mobile delete modal). Live
 - App routes inventory module to InventoryView; engine in Inventory.jsx
 - Theme Cyber-Obsidian
 - firebase dependency in package.json
+- Offline banner only when config truly missing
 
 ---
 
-# PENDING (local-only)
+# PENDING (verification)
 
-1. VITE_FIREBASE_* / real config + `npm install`
-2. Live round-trip smoke test (add → reload → edit → delete → decrementStock)
-3. Auth + Firestore rules before any public exposure
+1. Live round-trip smoke test (add → reload → edit → delete → decrementStock) against stoked4t
+2. Auth + Firestore rules before any public exposure
+3. Sales module consuming the atomic decrement path
 
 ---
 
@@ -58,6 +59,6 @@ Vault UI residual closed (search/filter/edit/delete + mobile delete modal). Live
 
 # Next residual
 
-1. Configure env and close live smoke test
+1. Run live smoke test (default config enables it)
 2. Sales workflow using `decrementStock` transaction
 3. Auth + rules

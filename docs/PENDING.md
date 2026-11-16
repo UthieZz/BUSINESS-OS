@@ -1,15 +1,17 @@
 Sprint Zero residuals:
+
 - Live vault read/write + search/filter/edit/delete confirmed (InventoryView implemented).
 - Atomic decrementStock exposed via Sell control on vault items (uses Firestore transaction).
 - Delete confirmation is now an in-app modal (mobile-friendly; no window.confirm).
 - Theme Card aligned to --card-bg.
 - Header status indicator now reflects processor inventory status (LIVE/OFFLINE) instead of hard-coded ONLINE.
-- Offline config banner added to Vault when VITE_FIREBASE_* missing.
-- .env.example added (now populated with confirmed stoked4t client config).
+- Offline config banner added to Vault when VITE_FIREBASE_* missing (default config makes this rare).
+- .env.example added (populated with confirmed stoked4t client config).
 - Dual inventory surfaces resolved: Inventory.jsx is no-render engine that seeds processor; InventoryView.jsx is the sole UI routed from App.
 - Local npm install + production build green (vite build succeeds; chunk warning only).
 - Vault UX: consistent ZAR formatting (toFixed(2)), larger mobile touch targets (min-height 44px on inputs/buttons), last-updated timestamp in filtered totals.
-- firebase.js now falls back to confirmed client config (apiKey/projectId etc.) so isFirebaseConfigured is true by default for the known project; env still overrides.
-Next: live smoke with real env (or default config), Auth + Firestore rules before any public exposure, Sales module that consumes decrementStock.
+- firebase.js falls back to confirmed client config (apiKey/projectId etc.) so isFirebaseConfigured is true by default for the known project; env still overrides.
+
+Next: live smoke with default config (or real env), Auth + Firestore rules before any public exposure, Sales module that consumes decrementStock.
 
 - Filtered totals summary (count / weight / value) added to Vault list for quicker residual awareness.
