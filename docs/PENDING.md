@@ -11,6 +11,8 @@ Sprint Zero residuals:
 - Local npm install + production build green (vite build succeeds; chunk warning only).
 - Vault UX: consistent ZAR formatting (toFixed(2)), larger mobile touch targets (min-height 44px on inputs/buttons), last-updated timestamp in filtered totals.
 - firebase.js falls back to confirmed client config (apiKey/projectId etc.) so isFirebaseConfigured is true by default for the known project; env still overrides.
+- Default activeModule set to "inventory" so Vault is the operational landing on load.
+- index.html title updated to Business OS — StokeD⁴T.
 
 - Sales list now resolves vault item names (instead of raw itemId) for readability.
 
