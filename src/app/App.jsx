@@ -5,6 +5,7 @@ import { useApp } from "../context/AppContext";
 import InventoryView from "../modules/Inventory/InventoryView";
 import Inventory from "../modules/Inventory/Inventory";
 import SalesView from "../modules/Sales/SalesView";
+import Sales from "../modules/Sales/Sales";
 
 function App() {
   const { activeModule } = useApp();
@@ -30,6 +31,7 @@ function App() {
   return (
     <Layout>
       <Inventory />
+      <Sales />
       {renderModule()}
       <Processor />
     </Layout>

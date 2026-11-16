@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import salesService from "../../services/SalesService";
+import processor from "../../processor/ProcessorService";
 import inventoryService from "../../services/InventoryService";
 import { isFirebaseConfigured } from "../../lib/firebase.js";
 
@@ -25,6 +26,8 @@ export default function SalesView() {
       ]);
       setSales(salesData);
       setVaultItems(vaultData);
+      const salesTotals = await salesService.getTotals();
+      processor.setState("sales", salesTotals);
     } catch (e) {
       setError(e.message || "Failed to load sales");
     } finally {

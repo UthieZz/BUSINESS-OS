@@ -17,3 +17,5 @@ Sprint Zero residuals:
 Next: live smoke with default config (or real env), Auth + Firestore rules before any public exposure, expand Sales (payments/reconciliation).
 
 - Filtered totals summary (count / weight / value) added to Vault list for quicker residual awareness.
+
+- Dashboard now shows live Sales totals (count + revenue) from processor sales state seeded by Sales engine (non-render) and refreshed on SalesView. Inventory value and weight use consistent ZAR/g formatting. Hard-coded "Coming Soon" cleaned for Sales card.

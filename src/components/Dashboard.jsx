@@ -2,9 +2,17 @@ import { useEffect, useState } from "react";
 import Card from "./Card";
 import processor from "../processor/ProcessorService";
 
+function formatZAR(n) {
+  const num = Number(n) || 0;
+  return `R${num.toFixed(2)}`;
+}
+
 function Dashboard() {
   const [inventory, setInventory] = useState(
     () => processor.getState("inventory") || {}
+  );
+  const [sales, setSales] = useState(
+    () => processor.getState("sales") || {}
   );
 
   useEffect(() => {
@@ -12,9 +20,13 @@ function Dashboard() {
       if (key === "inventory") {
         setInventory(processor.getState("inventory") || {});
       }
+      if (key === "sales") {
+        setSales(processor.getState("sales") || {});
+      }
     };
     // Seed + subscribe (unsubscribe on unmount)
     setInventory(processor.getState("inventory") || {});
+    setSales(processor.getState("sales") || {});
     const unsub = processor.on("stateChanged", onState);
     return unsub;
   }, []);
@@ -37,14 +49,14 @@ function Dashboard() {
           icon="📦"
           title="Inventory"
           value={`${inventory.assets ?? 0} Assets`}
-          subtitle={`R${inventory.inventoryValue ?? 0}`}
+          subtitle={formatZAR(inventory.inventoryValue)}
           status="success"
         />
 
         <Card
           icon="⚖️"
           title="Stock Weight"
-          value={`${inventory.totalWeight ?? 0} g`}
+          value={`${(inventory.totalWeight ?? 0).toFixed(1)} g`}
           subtitle="Current Inventory"
           status="info"
         />
@@ -58,17 +70,18 @@ function Dashboard() {
         />
 
         <Card
-          icon="💰"
-          title="Cash Flow"
-          value="Coming Soon"
-          subtitle="Sprint 2"
+          icon="🛒"
+          title="Sales"
+          value={`${sales.salesCount ?? 0} Sales`}
+          subtitle={formatZAR(sales.totalRevenue)}
+          status="success"
         />
 
         <Card
-          icon="🛒"
-          title="Sales"
+          icon="💰"
+          title="Cash Flow"
           value="Coming Soon"
-          subtitle="Sprint 3"
+          subtitle="Sprint residual"
         />
 
         <Card
