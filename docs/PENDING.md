@@ -12,6 +12,8 @@ Sprint Zero residuals:
 - Vault UX: consistent ZAR formatting (toFixed(2)), larger mobile touch targets (min-height 44px on inputs/buttons), last-updated timestamp in filtered totals.
 - firebase.js falls back to confirmed client config (apiKey/projectId etc.) so isFirebaseConfigured is true by default for the known project; env still overrides.
 
-Next: live smoke with default config (or real env), Auth + Firestore rules before any public exposure, Sales module that consumes decrementStock.
+- Minimal Sales module implemented: SalesService.recordSale calls decrementStock (transaction) then writes sale doc to `sales`. SalesView UI wired in App (select item, grams, unit price, list).
+
+Next: live smoke with default config (or real env), Auth + Firestore rules before any public exposure, expand Sales (payments/reconciliation).
 
 - Filtered totals summary (count / weight / value) added to Vault list for quicker residual awareness.

@@ -4,6 +4,7 @@ import Processor from "../processor/Processor";
 import { useApp } from "../context/AppContext";
 import InventoryView from "../modules/Inventory/InventoryView";
 import Inventory from "../modules/Inventory/Inventory";
+import SalesView from "../modules/Sales/SalesView";
 
 function App() {
   const { activeModule } = useApp();
@@ -14,6 +15,9 @@ function App() {
     }
     if (activeModule === "inventory") {
       return <InventoryView />;
+    }
+    if (activeModule === "sales") {
+      return <SalesView />;
     }
     return (
       <div>
