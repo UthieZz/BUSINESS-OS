@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from "react";
 const AppContext = createContext();
 
 export function AppProvider({ children }) {
-  const [activeModule, setActiveModule] = useState("dashboard");
+  const [activeModule, setActiveModule] = useState("inventory");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => setSidebarOpen((o) => !o);
