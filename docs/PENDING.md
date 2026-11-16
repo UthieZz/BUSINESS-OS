@@ -16,6 +16,10 @@ Sprint Zero residuals:
 
 - Sales list now resolves vault item names (instead of raw itemId) for readability.
 
+- Vault list now supports client-side sort (name / weight desc / value desc) in addition to search + low-stock filter.
+- Dashboard cards are clickable and navigate to the corresponding module via AppContext (wires navigation residual).
+- Hard-coded "Sprint Zero" status removed from Header; Cash Flow / Oracle cards no longer show misleading "Coming Soon" / "Monitoring..." values.
+
 Next: live smoke with default config (or real env), Auth + Firestore rules before any public exposure, expand Sales (payments/reconciliation).
 
 - Filtered totals summary (count / weight / value) added to Vault list for quicker residual awareness.

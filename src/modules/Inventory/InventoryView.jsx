@@ -20,6 +20,7 @@ export default function InventoryView() {
   const [sellGrams, setSellGrams] = useState("");
   const [deleteId, setDeleteId] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
+  const [sortBy, setSortBy] = useState("name");
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -106,6 +107,12 @@ export default function InventoryView() {
   const totalWeight = items.reduce((s, i) => s + (Number(i.weight) || 0), 0);
   const totalValue = items.reduce((s, i) => s + (Number(i.value) || 0), 0);
 
+  const sortedItems = [...items].sort((a, b) => {
+    if (sortBy === "weight") return (Number(b.weight) || 0) - (Number(a.weight) || 0);
+    if (sortBy === "value") return (Number(b.value) || 0) - (Number(a.value) || 0);
+    return (a.name || "").localeCompare(b.name || "");
+  });
+
   return (
     <div style={{ color: "var(--text)" }}>
       <h2 style={{ color: "var(--accent)", marginTop: 0 }}>Vault / Inventory</h2>
@@ -149,6 +156,22 @@ export default function InventoryView() {
           />
           Low stock only
         </label>
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          style={{
+            background: "var(--card-bg)",
+            border: "1px solid var(--border)",
+            color: "var(--text)",
+            padding: "10px 14px",
+            borderRadius: 4,
+            minHeight: 44,
+          }}
+        >
+          <option value="name">Sort: Name</option>
+          <option value="weight">Sort: Weight ↓</option>
+          <option value="value">Sort: Value ↓</option>
+        </select>
         <button
           type="button"
           onClick={refresh}
@@ -264,7 +287,7 @@ export default function InventoryView() {
         <p style={{ color: "#888" }}>No items in vault{search || lowStockOnly ? " matching filters" : ""}.</p>
       ) : (
         <div style={{ display: "grid", gap: 12 }}>
-          {items.map((item) => (
+          {sortedItems.map((item) => (
             <div
               key={item.id}
               style={{

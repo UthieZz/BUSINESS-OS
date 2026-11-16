@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Card from "./Card";
 import processor from "../processor/ProcessorService";
+import { useApp } from "../context/AppContext";
 
 function formatZAR(n) {
   const num = Number(n) || 0;
@@ -8,6 +9,7 @@ function formatZAR(n) {
 }
 
 function Dashboard() {
+  const { setActiveModule } = useApp();
   const [inventory, setInventory] = useState(
     () => processor.getState("inventory") || {}
   );
@@ -51,6 +53,7 @@ function Dashboard() {
           value={`${inventory.assets ?? 0} Assets`}
           subtitle={formatZAR(inventory.inventoryValue)}
           status="success"
+          onClick={() => setActiveModule("inventory")}
         />
 
         <Card
@@ -59,6 +62,7 @@ function Dashboard() {
           value={`${(inventory.totalWeight ?? 0).toFixed(1)} g`}
           subtitle="Current Inventory"
           status="info"
+          onClick={() => setActiveModule("inventory")}
         />
 
         <Card
@@ -67,6 +71,7 @@ function Dashboard() {
           value={inventory.lowStockAlerts ?? 0}
           subtitle="Requires Attention"
           status={inventory.lowStockAlerts > 0 ? "warning" : "success"}
+          onClick={() => setActiveModule("inventory")}
         />
 
         <Card
@@ -75,20 +80,23 @@ function Dashboard() {
           value={`${sales.salesCount ?? 0} Sales`}
           subtitle={formatZAR(sales.totalRevenue)}
           status="success"
+          onClick={() => setActiveModule("sales")}
         />
 
         <Card
           icon="💰"
           title="Cash Flow"
-          value="Coming Soon"
-          subtitle="Sprint residual"
+          value="—"
+          subtitle="Residual — open module"
+          onClick={() => setActiveModule("cashflow")}
         />
 
         <Card
           icon="🧠"
           title="Oracle"
-          value="Monitoring..."
-          subtitle="AI Layer"
+          value="—"
+          subtitle="Residual — open module"
+          onClick={() => setActiveModule("oracle")}
         />
       </div>
     </div>

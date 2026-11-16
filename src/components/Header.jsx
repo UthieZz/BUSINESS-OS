@@ -63,7 +63,6 @@ function Header() {
         <span style={{ color: isLive ? "#00FF66" : "#f59e0b", fontWeight: "bold" }}>
           ● {isLive ? "LIVE" : "OFFLINE"}
         </span>
-        <span style={{ color: "#888" }}>Sprint Zero</span>
       </div>
 
       <style>{`
